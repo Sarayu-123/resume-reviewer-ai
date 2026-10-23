@@ -1,71 +1,123 @@
-# ✦ Resume Reviewer AI
+# 🧠 Resume Reviewer AI
 
-### Your resume. Your target role. A clearer path forward.
+### Analyze your resume. Identify skill gaps. Improve with actionable feedback.
 
-An AI-powered resume analyzer that evaluates role-specific skill coverage, estimates ATS readability, and generates personalized improvement suggestions using a local LLM.
+An AI-assisted resume analysis application that evaluates role-specific skill coverage, estimates ATS readability, and generates improvement suggestions using Ollama.
 
 <p align="center">
-
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
   <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
   <img src="https://img.shields.io/badge/Ollama-111111?style=for-the-badge&logo=ollama&logoColor=white" alt="Ollama" />
-
 </p>
 
 ---
 
 ## ✨ Features
 
-| Feature | What it does |
+- 📄 **Resume Parsing** — Extract text from supported PDF and DOCX files.
+- 🎯 **Role-Based Analysis** — Evaluate resume skills against a selected job role.
+- 📊 **Resume Scoring** — Display an application-generated resume score.
+- 🧩 **Skill-Gap Analysis** — Identify matched and missing required skills.
+- 📈 **Skill Coverage** — View required-skill coverage and individual skill-match percentages.
+- 🎓 **Education Matching** — Display detected education information and role-match results.
+- 💼 **Experience Detection** — Report detected professional experience when available.
+- 📋 **ATS Readability Estimate** — Check common resume sections and structural indicators.
+- 🤖 **AI Suggestions** — Generate resume-improvement recommendations using Ollama.
+- 🖥️ **Interactive Dashboard** — Review analysis results through organized UI components.
+
+## 🧰 Tech Stack
+
+| Layer | Technologies |
 |---|---|
-| 📄 Resume Analysis | Extracts and analyzes resume content from supported PDF and DOCX files |
-| 🎯 Role-Based Matching | Evaluates skills against the selected job role |
-| 📊 Resume Scoring | Displays an application-generated resume score |
-| 🧩 Skill Gap Analysis | Highlights detected and missing required skills |
-| 🎓 Education Matching | Displays detected education information and its role match |
-| 📋 ATS Readability | Checks common resume structure and readability indicators |
-| 🤖 AI Suggestions | Generates recommendations to improve role alignment |
-| 🖥️ Local LLM | Integrates with Ollama and the configured Phi-3 model |
-
-## ⚙️ Tech Stack
-
-**Frontend:** Next.js · React · TypeScript · Tailwind CSS  
-**Backend:** Python · FastAPI · Uvicorn  
-**AI:** Ollama · Phi-3  
-**Document Processing:** PDF and DOCX extraction utilities  
-**Tools:** Git · GitHub · npm
+| Frontend | Next.js, React, TypeScript, Tailwind CSS |
+| Package Manager | npm |
+| Backend | Python, FastAPI, Uvicorn |
+| AI Runtime | Ollama |
+| Language Model | Phi-3 (`phi3`) |
+| Document Processing | PDF and DOCX extraction utilities |
+| Version Control | Git, GitHub |
 
 ## 🏗️ Architecture
 
 ```text
-User
- │
- ▼
-Next.js + TypeScript
- │  HTTP API requests
- ▼
-FastAPI Backend
- ├── Resume Text Extraction
- ├── Role-Based Skill Matching
- ├── Resume & ATS Scoring
- └── AI Suggestion Generation
-      │
-      ├── PDF / DOCX Processing
-      └── Ollama + Phi-3
- │
- ▼
-Analysis Dashboard
+                       USER
+                         │
+                         ▼
+             Next.js + React + TypeScript
+                         │
+                    HTTP Requests
+                         ▼
+                   FastAPI Backend
+                         │
+                 Python Analysis Layer
+                  ┌──────┼───────┐
+                  ▼      ▼       ▼
+              Document  Skill   Scoring &
+              Extraction Matching Readability
+                         │
+                         ▼
+                    Ollama / Phi-3
+                         │
+                         ▼
+                  AI Suggestions
+                         │
+                         ▼
+                  Results Dashboard
 ```
 
-## 🚀 Quick Start
+## 🔄 Version 1 → Version 2
+
+Resume Reviewer AI evolved from a Streamlit prototype into a full-stack application with a more customizable interface and more detailed presentation of analysis results.
+
+### 🏗️ Architectural Improvements
+
+| Version 1 — Streamlit | Version 2 — Next.js + FastAPI |
+|---|---|
+| Python-based Streamlit interface | Next.js, React, and TypeScript frontend |
+| UI and analysis workflow closely integrated | Frontend and backend separated through HTTP APIs |
+| Streamlit components for displaying results | Custom, reusable dashboard components |
+| Python application execution | Dedicated FastAPI backend served by Uvicorn |
+| Prototype-oriented structure | More modular frontend and backend organization |
+
+**Impact:** Independent frontend and backend development, a customizable interface, and clearer separation of responsibilities.
+
+### 🧠 Intelligence & Analysis Improvements
+
+| Capability | Version 1 | Version 2 |
+|---|---|---|
+| Resume evaluation | Overall scoring and analysis checks | Separately displays resume score, skill coverage, and ATS readability |
+| Skill-gap analysis | Identifies matched and missing skills | Quantifies required-skill coverage and displays individual skill-match percentages |
+| Experience reporting | Depends on extracted resume information | Can distinguish undetected experience from a confirmed value |
+| AI recommendations | Ollama-assisted suggestions | Suggestions presented alongside role-specific analysis and skill gaps |
+| Feedback interpretation | Initial resume-review results | More detailed breakdown of skills, education, readability, and recommendations |
+
+**Impact:** More granular and interpretable feedback helps users identify skill gaps and prioritize potential improvements.
+
+### 🚀 Further Intelligence Improvements
+
+These are planned enhancements unless already implemented and tested:
+
+- **Context-aware suggestions:** Include the selected role, detected skills, missing skills, and relevant resume evidence in the Ollama prompt.
+- **Semantic skill matching:** Recognize synonyms and equivalent terminology instead of relying only on exact keywords.
+- **Evidence-linked recommendations:** Explain which analysis finding supports each suggestion.
+- **Validated AI output:** Handle malformed responses, unavailable models, and request timeouts reliably.
+
+*Ollama was already used in Version 1. The project should not claim that AI was newly introduced or that model accuracy improved without evidence.*
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-[Node.js](https://nodejs.org/) · [Python](https://www.python.org/) · [Ollama](https://ollama.com/)
+Install:
 
-### 1. Clone
+- [Node.js and npm](https://nodejs.org/)
+- [Python](https://www.python.org/)
+- [Ollama](https://ollama.com/)
+- Git
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Sarayu-123/resume-reviewer-ai.git
@@ -78,15 +130,17 @@ cd resume-reviewer-ai/version-2-nextjs-fastapi
 ollama pull phi3
 ```
 
-Ensure Ollama is running and accessible at `http://localhost:11434`.
+Ensure Ollama is running and the configured model is available at `http://localhost:11434`.
 
-### 3. Start the backend
+### 3. Set up the backend
+
+Create a virtual environment:
 
 ```bash
 python -m venv .venv
 ```
 
-**Windows:**
+Activate it on Windows:
 
 ```bash
 .venv\Scripts\activate
@@ -99,9 +153,9 @@ pip install -r requirements.txt
 uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-API documentation: [localhost:8000/docs](http://127.0.0.1:8000/docs)
+API documentation: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
-### 4. Start the frontend
+### 4. Set up the frontend
 
 Open a second terminal in `version-2-nextjs-fastapi`:
 
@@ -110,69 +164,83 @@ npm install
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000).
 
-> Keep the backend and Ollama running while using the application. These commands assume the dependency files and entry points match the paths above.
+**Why npm?** `npm install` installs the frontend dependencies defined in `package.json`; `npm run dev` executes the configured Next.js development script. Backend dependencies are installed separately with Python's `pip`.
+
+Keep the backend and Ollama running while using the application. The commands assume the dependency files and entry points are located as described.
 
 ## 🔍 How It Works
 
-**Upload → Select Role → Analyze → Review → Improve**
+1. **Upload:** Select a supported resume file.
+2. **Choose a role:** Select the target job role.
+3. **Extract:** Convert the document into readable text.
+4. **Analyze:** Evaluate skills, education, experience, and readability indicators.
+5. **Review:** Inspect the resume score, detected skills, and missing skills.
+6. **Improve:** Generate AI suggestions and review potential next steps.
 
-1. Upload a supported resume.
-2. Select your target job role.
-3. Review the resume score, education information, skill matches, and missing skills.
-4. Generate AI suggestions and use them to guide improvements.
+## 📊 Understanding the Results
 
-## 📈 Understanding the Scores
+| Metric | Meaning |
+|---|---|
+| Resume Score | An application-generated score based on the implemented scoring rules |
+| Required-Skill Coverage | Percentage of configured required skills detected in the extracted resume text |
+| Skill Match | Individual match results for configured skills |
+| ATS Readability Estimate | A heuristic based on structural and readability checks |
+| AI Suggestions | Model-generated recommendations that require user review |
 
-- **Resume Score:** An application-generated assessment based on the implemented scoring logic.
-- **Required-Skill Coverage:** The percentage of configured required skills detected in the extracted resume text.
-- **ATS Readability Estimate:** A heuristic based on common resume structure and readability checks—not a score from a real ATS.
-- **AI Suggestions:** Model-generated recommendations that should be reviewed before applying them.
-
-A missing skill means it was not detected by the analyzer; it does not always prove the skill is absent from the resume.
+**Important:** A missing skill means it was not detected by the analyzer; it does not necessarily prove the skill is absent from the resume. The ATS readability estimate is not a score from a real applicant tracking system and does not guarantee selection.
 
 ## 🔐 Privacy & Limitations
 
-- Ollama provides local model inference when configured to use the local instance.
-- Verify all application network requests and storage behavior before assuming resume data stays entirely local.
-- Results depend on text extraction, role requirements, skill-matching logic, and model output.
-- Scores are estimates, not guarantees of ATS success, interview selection, or employment.
+- Ollama supports local model inference when configured to use a local instance.
+- Verify network requests and storage behavior before assuming all resume data stays local.
+- Results depend on document extraction, configured role requirements, matching rules, and model output.
+- AI recommendations can be incomplete or inaccurate; verify them before editing your resume.
+- Scores are estimates, not guarantees of ATS success, interviews, or employment.
+- Never commit private resumes, credentials, or environment files to GitHub.
 
 ## 📁 Project Structure
 
 ```text
-version-2-nextjs-fastapi/
-├── app/                   # Next.js routes
-├── components/            # UI components
-├── public/                # Static assets
-├── main.py                # FastAPI application
-├── pdf_reader.py          # PDF extraction
-├── docx_reader.py         # DOCX extraction
-├── llm_extractor.py       # LLM-assisted extraction
-├── package.json           # Frontend dependencies
-├── requirements.txt       # Backend dependencies
-└── README.md
+resume-reviewer-ai/
+├── version-1-streamlit/
+│   └── ...                  # Streamlit implementation
+├── version-2-nextjs-fastapi/
+│   ├── app/                 # Next.js routes
+│   ├── components/          # UI components
+│   ├── public/              # Static assets
+│   ├── main.py              # FastAPI application
+│   ├── pdf_reader.py        # PDF extraction
+│   ├── docx_reader.py       # DOCX extraction
+│   ├── llm_extractor.py     # LLM-assisted extraction
+│   ├── package.json         # Frontend dependencies
+│   ├── requirements.txt     # Backend dependencies
+│   └── README.md
+├── README.md
+└── .gitignore
 ```
 
-*Adjust the tree to reflect the files actually present in your repository.*
+*Adjust the tree if your actual repository differs.*
 
 ## 🛣️ Future Scope
 
-- Improved skill synonym recognition
-- More robust document extraction and validation
-- Custom job descriptions and skill requirements
-- Expanded automated tests
-- Optional analysis export
+- Semantic skill matching and synonym recognition
+- Job-description upload and direct resume-to-job-description comparison
+- Evidence-linked AI recommendations
+- More robust document validation and automated tests
+- Exportable analysis reports
+- Optional authentication and resume history
 
 ## 👩‍💻 Author
 
 **N Ch Krishna Sri Sarayu**
 
-[GitHub Profile](https://github.com/Sarayu-123) · [Project Repository](https://github.com/Sarayu-123/resume-reviewer-ai)
+- [GitHub Profile](https://github.com/Sarayu-123)
+- [Project Repository](https://github.com/Sarayu-123/resume-reviewer-ai)
 
 ---
 
 <p align="center">
-  <b>Built to make resume feedback clearer, more actionable, and role-specific.</b>
+  <b>Turning resume analysis into measurable, actionable feedback.</b>
 </p>
