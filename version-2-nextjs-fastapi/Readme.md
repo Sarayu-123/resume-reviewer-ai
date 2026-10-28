@@ -2,7 +2,7 @@
 
 ### Analyze your resume. Identify skill gaps. Improve with actionable feedback.
 
-An AI-assisted resume analysis application that evaluates role-specific skill coverage, estimates ATS readability, and generates improvement suggestions using Ollama.
+An AI-assisted resume analysis application that evaluates role-specific skill coverage, estimates ATS readability, compares resume relevance directly against target Job Descriptions, and generates improvement suggestions using Ollama.
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
@@ -18,6 +18,7 @@ An AI-assisted resume analysis application that evaluates role-specific skill co
 
 - 📄 **Resume Parsing** — Extract text from supported PDF and DOCX files.
 - 🎯 **Role-Based Analysis** — Evaluate resume skills against a selected job role.
+- 🎯 **Job Description (JD) Match (Optional)** — Compare resume relevance against a specific Job Description, calculate match percentage, identify matched & missing JD keywords, and receive tailored recommendations to bridge gaps.
 - 📊 **Resume Scoring** — Display an application-generated resume score.
 - 🧩 **Skill-Gap Analysis** — Identify matched and missing required skills.
 - 📈 **Skill Coverage** — View required-skill coverage and individual skill-match percentages.
@@ -42,29 +43,31 @@ An AI-assisted resume analysis application that evaluates role-specific skill co
 ## 🏗️ Architecture
 
 ```text
-                       USER
-                         │
-                         ▼
-             Next.js + React + TypeScript
-                         │
-                    HTTP Requests
-                         ▼
-                   FastAPI Backend
-                         │
+                        USER
+                          │
+                          ▼
+              Next.js + React + TypeScript
+                          │
+                     HTTP Requests
+                          ▼
+                    FastAPI Backend
+                          │
                  Python Analysis Layer
-                  ┌──────┼───────┐
-                  ▼      ▼       ▼
-              Document  Skill   Scoring &
-              Extraction Matching Readability
-                         │
-                         ▼
-                    Ollama / Phi-3
-                         │
-                         ▼
-                  AI Suggestions
-                         │
-                         ▼
-                  Results Dashboard
+         ┌───────────────┼───────────────┬──────────────────┐
+         ▼               ▼               ▼                  ▼
+      Document         Skill         Scoring &       Job Description (JD)
+     Extraction      Matching       Readability           Matching
+         │               │               │                  │
+         └───────────────┼───────────────┘                  │
+                         ▼                                  ▼
+                   Ollama / Phi-3                    Relevance & Tailored
+                         │                               Suggestions
+                         ▼                                  │
+                  AI Suggestions                            │
+                         │                                  │
+                         └─────────────────┬────────────────┘
+                                           ▼
+                                   Results Dashboard
 ```
 
 ## 🔄 Version 1 → Version 2
@@ -79,7 +82,7 @@ Resume Reviewer AI evolved from a Streamlit prototype into a full-stack applicat
 | UI and analysis workflow closely integrated | Frontend and backend separated through HTTP APIs |
 | Streamlit components for displaying results | Custom, reusable dashboard components |
 | Python application execution | Dedicated FastAPI backend served by Uvicorn |
-| Prototype-oriented structure | More modular frontend and backend organization |
+| Prototype-oriented structure | More modular frontend and backend organization with isolated feature modules |
 
 **Impact:** Independent frontend and backend development, a customizable interface, and clearer separation of responsibilities.
 
@@ -90,6 +93,7 @@ Resume Reviewer AI evolved from a Streamlit prototype into a full-stack applicat
 | Resume evaluation | Overall scoring and analysis checks | Separately displays resume score, skill coverage, and ATS readability |
 | Skill-gap analysis | Identifies matched and missing skills | Quantifies required-skill coverage and displays individual skill-match percentages |
 | Experience reporting | Depends on extracted resume information | Can distinguish undetected experience from a confirmed value |
+| Job Description matching | Not supported | Direct comparison against custom Job Descriptions with relevance scoring, matched/missing requirements, and targeted suggestions |
 | AI recommendations | Ollama-assisted suggestions | Suggestions presented alongside role-specific analysis and skill gaps |
 | Feedback interpretation | Initial resume-review results | More detailed breakdown of skills, education, readability, and recommendations |
 
@@ -172,12 +176,13 @@ Keep the backend and Ollama running while using the application. The commands as
 
 ## 🔍 How It Works
 
-1. **Upload:** Select a supported resume file.
+1. **Upload:** Select a supported resume file (`.pdf` or `.docx`).
 2. **Choose a role:** Select the target job role.
 3. **Extract:** Convert the document into readable text.
 4. **Analyze:** Evaluate skills, education, experience, and readability indicators.
-5. **Review:** Inspect the resume score, detected skills, and missing skills.
-6. **Improve:** Generate AI suggestions and review potential next steps.
+5. **Job Description Match (Optional):** Paste a specific job description to compute a direct relevance score, inspect matched/missing requirements, and receive targeted tailoring tips.
+6. **Review:** Inspect the resume score, detected skills, and missing skills.
+7. **Improve:** Generate AI suggestions and review potential next steps.
 
 ## 📊 Understanding the Results
 
@@ -186,6 +191,7 @@ Keep the backend and Ollama running while using the application. The commands as
 | Resume Score | An application-generated score based on the implemented scoring rules |
 | Required-Skill Coverage | Percentage of configured required skills detected in the extracted resume text |
 | Skill Match | Individual match results for configured skills |
+| JD Relevance Score | Match percentage comparing resume skills against requirements in the provided Job Description |
 | ATS Readability Estimate | A heuristic based on structural and readability checks |
 | AI Suggestions | Model-generated recommendations that require user review |
 
@@ -207,13 +213,12 @@ resume-reviewer-ai/
 ├── version-1-streamlit/
 │   └── ...                  # Streamlit implementation
 ├── version-2-nextjs-fastapi/
-│   ├── app/                 # Next.js routes
-│   ├── components/          # UI components
+│   ├── app/                 # Next.js routes & API handlers
+│   ├── components/          # UI components (Dashboard, ScoreCard, JD Cards)
 │   ├── public/              # Static assets
-│   ├── main.py              # FastAPI application
-│   ├── pdf_reader.py        # PDF extraction
-│   ├── docx_reader.py       # DOCX extraction
-│   ├── llm_extractor.py     # LLM-assisted extraction
+│   ├── backend/             # FastAPI backend
+│   │   ├── utils/           # Extractors & isolated JD analyzer
+│   │   └── main.py          # FastAPI application & endpoints
 │   ├── package.json         # Frontend dependencies
 │   ├── requirements.txt     # Backend dependencies
 │   └── README.md
@@ -221,12 +226,9 @@ resume-reviewer-ai/
 └── .gitignore
 ```
 
-*Adjust the tree if your actual repository differs.*
-
 ## 🛣️ Future Scope
 
 - Semantic skill matching and synonym recognition
-- Job-description upload and direct resume-to-job-description comparison
 - Evidence-linked AI recommendations
 - More robust document validation and automated tests
 - Exportable analysis reports

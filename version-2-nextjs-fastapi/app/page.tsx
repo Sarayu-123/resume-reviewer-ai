@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -8,6 +7,9 @@ import { ScoreCard } from "@/components/dashboard/score-card"
 import { SkillChart } from "@/components/dashboard/skill-chart"
 import { SuggestionsPanel } from "@/components/dashboard/suggestions-panel"
 import { EmptyState } from "@/components/dashboard/empty-state"
+import { JDInputCard } from "@/components/dashboard/jd-input-card"
+import { JDMatchCard } from "@/components/dashboard/jd-match-card"
+import type { JDAnalysisResult } from "@/lib/types"
 
 const API_BASE_URL = "http://127.0.0.1:8000"
 
@@ -43,6 +45,11 @@ export default function Dashboard() {
   const [suggestLoading, setSuggestLoading] = useState(false)
   const [error, setError] = useState("")
 
+  // Optional Job Description (JD) feature state (isolated)
+  const [jdAnalysis, setJdAnalysis] = useState<JDAnalysisResult | null>(null)
+  const [jdLoading, setJdLoading] = useState(false)
+  const [jdError, setJdError] = useState("")
+
   const handleAnalyze = async (file: File, role: string) => {
     const formData = new FormData()
     formData.append("file", file)
@@ -52,6 +59,8 @@ export default function Dashboard() {
     setError("")
     setAnalysis(null)
     setSuggestions([])
+    setJdAnalysis(null)
+    setJdError("")
 
     try {
       let res: Response
@@ -130,6 +139,50 @@ export default function Dashboard() {
     }
   }
 
+  // Isolated JD Matching handler
+  const handleAnalyzeJD = async (jdText: string) => {
+    if (!analysis?.resumeText) {
+      setJdError("Please upload and analyze a resume first.")
+      return
+    }
+
+    setJdLoading(true)
+    setJdError("")
+
+    try {
+      let res: Response
+
+      try {
+        res = await fetch(`${API_BASE_URL}/analyze-jd`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            resumeText: analysis.resumeText,
+            jdText,
+          }),
+        })
+      } catch {
+        throw new Error(
+          "Cannot connect to the JD analysis endpoint. Check that FastAPI is running."
+        )
+      }
+
+      const data = await readResponse(res)
+      setJdAnalysis(data)
+    } catch (err) {
+      console.error("JD analysis error:", err)
+      setJdError(
+        err instanceof Error
+          ? err.message
+          : "Failed to compare with Job Description."
+      )
+    } finally {
+      setJdLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50">
       <DashboardHeader />
@@ -152,6 +205,13 @@ export default function Dashboard() {
               isAnalyzing={loading}
             />
 
+            {/* OPTIONAL ISOLATED JOB DESCRIPTION INPUT */}
+            <JDInputCard
+              hasResume={Boolean(analysis?.resumeText)}
+              isLoading={jdLoading}
+              onAnalyzeJD={handleAnalyzeJD}
+            />
+
             {analysis && (
               <SuggestionsPanel
                 suggestions={suggestions}
@@ -163,9 +223,30 @@ export default function Dashboard() {
 
           <div className="lg:col-span-2">
             {analysis ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ScoreCard analysis={analysis} />
-                <SkillChart skillMatches={analysis.skillMatches} />
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <ScoreCard analysis={analysis} />
+                  <SkillChart skillMatches={analysis.skillMatches} />
+                </div>
+
+                {/* JD ANALYSIS ERROR NOTIFICATION */}
+                {jdError && (
+                  <div
+                    role="alert"
+                    className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-700"
+                  >
+                    <p className="font-semibold">JD Analysis Notice</p>
+                    <p className="mt-0.5">{jdError}</p>
+                  </div>
+                )}
+
+                {/* ISOLATED JOB DESCRIPTION RELEVANCE CARD */}
+                {jdAnalysis && (
+                  <JDMatchCard
+                    result={jdAnalysis}
+                    onClear={() => setJdAnalysis(null)}
+                  />
+                )}
               </div>
             ) : (
               <EmptyState />

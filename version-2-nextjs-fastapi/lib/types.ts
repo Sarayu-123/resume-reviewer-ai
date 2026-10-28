@@ -32,3 +32,17 @@ export interface Suggestion {
   description: string
   impact: "high" | "medium" | "low"
 }
+
+export interface JDSuggestion {
+  title: string
+  description: string
+  type?: "missing" | "highlight" | "format"
+}
+
+export interface JDAnalysisResult {
+  jdScore: number
+  matchedSkills: string[]
+  missingSkills: string[]
+  totalJdSkills: number
+  suggestions: JDSuggestion[]
+}

@@ -15,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from utils.pdf_reader import read_pdf
 from utils.docx_reader import read_docx
 from utils.llm_extractor import extract_with_llm
+from utils.jd_analyzer import analyze_jd_relevance
 
 
 logger = logging.getLogger(__name__)
@@ -744,4 +745,40 @@ async def ai_suggestions(data: dict):
         raise HTTPException(
             status_code=502,
             detail="Could not generate AI suggestions",
+        ) from error
+
+
+# --------------------------------------------------
+# JOB DESCRIPTION (JD) RELEVANCE ENDPOINT (ISOLATED)
+# --------------------------------------------------
+
+@app.post("/analyze-jd")
+async def analyze_jd(data: dict):
+    """Analyze resume relevance against a specific Job Description."""
+    resume_text = data.get("resumeText") or data.get("resume_text") or ""
+    jd_text = data.get("jdText") or data.get("jd_text") or ""
+
+    if not isinstance(resume_text, str) or not resume_text.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Resume text is required to calculate JD relevance",
+        )
+
+    if not isinstance(jd_text, str) or not jd_text.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Job description text is required",
+        )
+
+    try:
+        result = analyze_jd_relevance(
+            resume_text,
+            jd_text,
+        )
+        return result
+    except Exception as error:
+        logger.exception("JD relevance analysis failed: %s", error)
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to analyze Job Description relevance",
         ) from error

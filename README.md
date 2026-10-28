@@ -2,7 +2,7 @@
 
 ### From Resume Upload to Actionable Career Insights
 
-An AI-assisted resume analysis system that evaluates resume quality, identifies skill gaps, analyzes formatting, compares skills against target roles, and generates improvement suggestions using Ollama.
+An AI-assisted resume analysis system that evaluates resume quality, identifies skill gaps, analyzes formatting, compares skills against target roles, evaluates direct Job Description relevance, and generates improvement suggestions using Ollama.
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
@@ -20,7 +20,7 @@ An AI-assisted resume analysis system that evaluates resume quality, identifies 
 
 Resume Reviewer AI was developed through two iterations: a Python-based Streamlit prototype and a full-stack web application built with Next.js, React, TypeScript, and FastAPI.
 
-Both versions use Ollama for AI-assisted suggestions. Version 2 reorganizes the application architecture and presents analysis results through a more customizable dashboard.
+Both versions use Ollama for AI-assisted suggestions. Version 2 reorganizes the application architecture, presents analysis results through a more customizable dashboard, and adds optional direct Job Description (JD) relevance analysis.
 
 ### 🎯 Core Capabilities
 
@@ -29,6 +29,7 @@ Both versions use Ollama for AI-assisted suggestions. Version 2 reorganizes the 
 - 📊 Resume scoring
 - 🧩 Skill matching and gap identification
 - 🎯 Role-specific resume analysis
+- 🎯 Optional Job Description (JD) relevance comparison & targeted advice (Version 2)
 - 📋 Formatting and ATS-readability checks
 - 🎓 Education matching and experience detection
 - 🤖 Ollama-powered improvement suggestions
@@ -46,7 +47,7 @@ The project evolved in two dimensions: **application architecture** and **the pr
 | Frontend | Python-based UI | Next.js, React, TypeScript |
 | Backend | Integrated Streamlit application | Dedicated FastAPI backend |
 | Communication | Integrated application workflow | HTTP API communication |
-| Organization | Prototype-oriented structure | More modular frontend and backend |
+| Organization | Prototype-oriented structure | Modular frontend and backend with isolated feature modules |
 | AI runtime | Ollama | Ollama |
 | Document processing | Python utilities | Python utilities |
 
@@ -59,6 +60,7 @@ The project evolved in two dimensions: **application architecture** and **the pr
 | Resume evaluation | Version 2 presents analysis results in a more structured dashboard. |
 | Skill-gap analysis | Results can be presented as matched skills, missing skills, and required-skill coverage. |
 | Role-specific feedback | Analysis results are organized around the selected target role. |
+| Job Description match | Version 2 adds optional direct comparison against custom Job Descriptions with relevance scoring, matched/missing requirements, and targeted suggestions. |
 | ATS readability | Structural checks are presented separately from other resume-analysis results. |
 | Education and experience | Detected information can be shown as separate analysis categories. |
 | AI recommendations | Ollama-generated suggestions are presented alongside resume-analysis results. |
@@ -72,7 +74,6 @@ The following are future enhancements, not claims of completed functionality:
 - **Semantic skill matching:** Recognize relevant synonyms and equivalent terminology.
 - **Context-aware recommendations:** Include the selected role and detected skill gaps in AI prompts.
 - **Evidence-linked feedback:** Connect recommendations to specific resume content.
-- **Job-description comparison:** Compare resume content directly against a supplied job description.
 - **More robust AI handling:** Validate model responses and handle unavailable models and timeouts.
 
 ---
@@ -107,7 +108,7 @@ A Python-based implementation that established the core resume-analysis workflow
 
 ## 🚀 Version 2 — Full-Stack Application
 
-A redesigned application that separates the frontend from the backend and presents resume-analysis results through a custom web interface.
+A redesigned application that separates the frontend from the backend, presents resume-analysis results through a custom web interface, and supports direct Job Description relevance matching.
 
 ### Frontend
 
@@ -118,7 +119,7 @@ A redesigned application that separates the frontend from the backend and presen
 
 ### Backend and AI
 
-- **Python** — Resume-processing and analysis logic
+- **Python** — Resume-processing, skill-matching, and JD analysis logic
 - **FastAPI** — HTTP API endpoints
 - **Uvicorn** — ASGI server
 - **pdfplumber** — PDF extraction
@@ -128,27 +129,27 @@ A redesigned application that separates the frontend from the backend and presen
 ### Analysis Workflow
 
 ```text
-Resume Upload + Target Role
-            │
-            ▼
-     Document Extraction
-            │
-            ▼
-      Resume Text
-            │
-            ▼
-   Resume Analysis Pipeline
-            │
-     ┌──────┼─────────┐
-     ▼      ▼         ▼
-   Skills  Scoring  Readability
-     │      │         │
-     └──────┼─────────┘
-            ▼
-   Ollama AI Suggestions
-            │
-            ▼
-    Results Dashboard
+Resume Upload + Target Role [+ Optional JD]
+                    │
+                    ▼
+           Document Extraction
+                    │
+                    ▼
+             Resume Text
+                    │
+                    ▼
+         Resume Analysis Pipeline
+                    │
+         ┌──────────┼──────────┬──────────────────┐
+         ▼          ▼          ▼                  ▼
+       Skills    Scoring   Readability     Job Description (JD)
+         │          │          │                 Matching
+         └──────────┼──────────┘                  │
+                    ▼                             ▼
+          Ollama AI Suggestions            Relevance Score &
+                    │                     Tailored Suggestions
+                    ▼                             │
+            Results Dashboard ◀───────────────────┘
 ```
 
 ### Current Analysis Output
@@ -159,6 +160,7 @@ Depending on the resume and selected role, Version 2 can display:
 - Required-skill coverage percentage
 - Matched and missing skills
 - Individual skill-match results
+- Optional Job Description (JD) match score, detected/missing JD requirements, and targeted suggestions
 - ATS-readability estimate based on structural checks
 - Education-match information
 - Professional-experience detection
@@ -176,7 +178,7 @@ Depending on the resume and selected role, Version 2 can display:
                      USER
                       │
                       ▼
-              Resume Upload
+               Resume Upload
                       │
                       ▼
               Frontend Interface
@@ -271,7 +273,6 @@ The two versions have different dependencies and startup procedures. Refer to th
 ## 🔮 Future Scope
 
 - Semantic skill matching
-- Direct job-description matching
 - More context-aware AI recommendations
 - Evidence-linked feedback
 - Expanded resume analytics
